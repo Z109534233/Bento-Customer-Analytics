@@ -1,0 +1,31 @@
+{
+  "dataset": "synthetic demonstration data only",
+  "reference_date": "2025-06-30",
+  "valid_orders": 710,
+  "customers": 120,
+  "revenue": 114230.0,
+  "rfm_segments": {
+    "Dormant": 25,
+    "New Customers": 25,
+    "Top Customers": 23,
+    "Potential Loyalists": 16,
+    "At Risk": 15,
+    "Developing": 13,
+    "Loyal Repeat": 3
+  },
+  "churn_levels": {
+    "Low": 66,
+    "Very High": 50,
+    "Medium": 4
+  },
+  "repurchase_customers": 103,
+  "median_repurchase_gap_days": 8.5,
+  "top_market_basket_rule": {
+    "antecedent": "Grilled Chicken Bento",
+    "consequent": "Tea Egg",
+    "co_occurrence": 62,
+    "support": 0.0873,
+    "confidence": 0.6458,
+    "lift": 3.5824
+  }
+}

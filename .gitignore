@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+.DS_Store
+.env
+.env.*
+
+# Generated synthetic demo files
+sample_data/*.csv
+outputs/*.csv

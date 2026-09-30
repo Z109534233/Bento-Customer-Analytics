@@ -66,3 +66,29 @@ Valid order items are aggregated at the customer-product level. The product with
 ## 7. Reproducibility
 
 The public dataset is generated from a fixed random seed. The repository also includes automated unit tests and a GitHub Actions workflow so the core analytics can be re-run and checked independently.
+
+
+## 8. Bootstrap uncertainty
+
+The public extension adds percentile bootstrap intervals rather than reporting point estimates alone.
+
+- Customer-level median repurchase gaps are resampled across customers.
+- Market-basket lift is bootstrapped at the **order/basket level**, preserving the within-order item structure.
+
+The default public demo uses 5,000 bootstrap resamples and reports 95% intervals.
+
+## 9. Future 30-day repurchase model
+
+The modelling target is whether a customer places at least one valid order in the 30 days after a snapshot date.
+
+Features are built using only data available by the snapshot date:
+
+- recency in days
+- order frequency and spend in the previous 90 days
+- lifetime order count and lifetime spend
+- average order value
+- tenure in days
+
+A standardised logistic regression with balanced class weights is evaluated using an **expanding-window temporal split**. For each test snapshot, training data contain only earlier snapshots. This is more appropriate than a random row split for a time-dependent customer-behaviour task because it reduces look-ahead leakage.
+
+Evaluation reports ROC-AUC, Average Precision and Brier score. ROC-AUC measures ranking discrimination, Average Precision is informative under changing class balance, and Brier score assesses probability accuracy/calibration.

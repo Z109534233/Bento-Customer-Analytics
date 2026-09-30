@@ -11,3 +11,8 @@ This project is intentionally explicit about what the metrics can and cannot sup
 7. **Synthetic public data cannot demonstrate real commercial effect.** The included dataset exists only to make the analytical code reproducible without exposing private client data.
 8. **No public revenue forecast is claimed.** The original prototype included a what-if scenario screen. The public portfolio does not present it as statistical forecasting because it was a deterministic scenario calculation rather than a validated time-series model.
 9. **AI-generated interpretation is secondary to computation.** In the original system, AI was used to explain dashboard outputs. Core metrics were computed deterministically before any model-generated commentary.
+
+
+10. **The predictive extension is demonstrated on synthetic data.** Its metrics show that the implementation supports leakage-aware temporal evaluation; they are not evidence that the model will generalise to the original store or another business.
+11. **Calibration is not stable across all held-out months.** In the synthetic walk-forward demo, ROC-AUC remains useful while the May Brier score deteriorates as the outcome base rate changes. A deployment setting would require recalibration, monitoring and retraining rules.
+12. **Repeated customer snapshots are not independent observations.** Temporal holdouts prevent future-to-past leakage, but customers can appear in multiple training snapshots. A larger study could add customer-grouped sensitivity analyses and hierarchical or survival models.

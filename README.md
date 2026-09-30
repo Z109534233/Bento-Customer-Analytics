@@ -93,6 +93,42 @@ Directional rules are emitted in both directions (`A → B` and `B → A`) so co
 
 Valid order-item data are aggregated at customer-product level to identify each customer's most frequently purchased product and associated spend.
 
+## Statistical extension
+
+To move beyond purely descriptive analytics, the public edition includes a small **future-repurchase modelling extension** and **bootstrap uncertainty estimates**. These results use the synthetic demo only; they demonstrate methodology rather than real commercial predictive performance.
+
+### Future 30-day repurchase model
+
+A logistic-regression classifier predicts whether a customer will make at least one valid purchase in the next 30 days. Features are calculated strictly from information available at each snapshot date:
+
+- recency
+- 90-day frequency and monetary value
+- lifetime order count and spend
+- average order value
+- customer tenure
+
+Validation uses an **expanding-window temporal holdout**: every test month is predicted using only earlier snapshots for training.
+
+| Held-out snapshot | Train rows | Test rows | ROC-AUC | Average Precision | Brier score |
+|---|---:|---:|---:|---:|---:|
+| 2025-03-31 | 65 | 93 | 0.796 | 0.749 | 0.197 |
+| 2025-04-30 | 158 | 94 | 0.929 | 0.577 | 0.097 |
+| 2025-05-31 | 252 | 95 | 0.774 | 0.591 | 0.324 |
+| **Mean** | — | — | **0.833** | **0.639** | **0.206** |
+
+The variation across months is itself informative: discrimination remains useful, while the May Brier score worsens as the target base rate shifts. This is a reminder that ranking performance and probability calibration are different questions.
+
+### Bootstrap uncertainty
+
+The synthetic demo also reports percentile-bootstrap intervals:
+
+- Median repurchase interval: **8.5 days**, 95% bootstrap CI **[7.0, 11.0]**
+- Grilled Chicken Bento → Tea Egg lift: **3.58**, 95% order-bootstrap CI **[3.05, 4.23]**
+
+These intervals quantify sampling uncertainty in the synthetic demonstration and do not replace validation on the original private operational data.
+
+The full walkthrough is in [`notebooks/customer_analytics_walkthrough.ipynb`](notebooks/customer_analytics_walkthrough.ipynb).
+
 ## Reproducible public demo
 
 The demo data are **100% synthetic** and generated locally with a fixed random seed. Running the generator and demo scripts produces deterministic CSV tables; only a compact result snapshot is committed to the repository.
@@ -181,15 +217,20 @@ In the original system, AI was used as an **interpretation layer after determini
 ├── requirements.txt
 ├── .github/workflows/tests.yml
 ├── src/
-│   └── analytics.py
+│   ├── analytics.py
+│   └── modeling.py
 ├── scripts/
 │   ├── generate_synthetic_data.py
-│   └── run_demo.py
+│   ├── run_demo.py
+│   └── run_statistical_extension.py
+├── notebooks/
+│   └── customer_analytics_walkthrough.ipynb
 ├── sample_data/
 │   └── README.md              # generated CSVs are gitignored
 ├── outputs/
 │   ├── README.md
-│   └── demo_summary.json       # compact reproducible result snapshot
+│   ├── demo_summary.json
+│   └── statistical_extension_summary.json
 ├── sql/
 │   └── schema.sql
 ├── docs/
@@ -199,7 +240,8 @@ In the original system, AI was used as an **interpretation layer after determini
 │   ├── data_privacy.md
 │   └── publication_checklist.md
 └── tests/
-    └── test_analytics.py
+    ├── test_analytics.py
+    └── test_modeling.py
 ```
 
 ## Run locally
@@ -211,6 +253,7 @@ python -m venv .venv
 pip install -r requirements.txt
 python scripts/generate_synthetic_data.py
 python scripts/run_demo.py
+python scripts/run_statistical_extension.py
 pytest -q
 ```
 

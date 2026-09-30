@@ -113,6 +113,34 @@ Current synthetic demo summary:
 
 These figures are **not real business results**; they only demonstrate that the analytical pipeline is reproducible without exposing private data.
 
+## System screenshots
+
+The screenshots below are privacy-scrubbed views of the original dashboard interface. Customer-identifying table rows are excluded; the reproducible code and data in this public repository use synthetic data.
+
+### Market Basket Analysis
+
+Identifies frequently co-purchased products and supports bundle or recommendation analysis using association-rule metrics such as support, confidence and lift.
+
+![Market Basket Analysis](market-basket.jpg)
+
+### Repurchase Behaviour Analysis
+
+Groups customers by typical repurchase interval using the median gap between distinct purchase dates, helping describe repeat-purchase behaviour without assuming a predictive model.
+
+![Repurchase Behaviour Analysis](repurchase-analysis.jpg)
+
+### Customer Retention Alerts
+
+Summarises customers by transparent recency-based risk bands. These alerts are operational heuristics rather than predicted churn probabilities.
+
+![Customer Retention Alerts](churn-alerts.jpg)
+
+### Order Time Analysis
+
+Explores when customers tend to place orders across defined dayparts, supporting operational planning and staffing decisions.
+
+![Order Time Analysis](order-time-analysis.jpg)
+
 ## Architecture
 
 ```mermaid
